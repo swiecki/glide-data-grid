@@ -35,7 +35,7 @@ export function compareRaw(a: string, b: string) {
 type Props = Pick<DataEditorProps, "getCellContent" | "rows" | "columns"> & {
     sort?: {
         column: GridColumn;
-        mode?: "default" | "raw";
+        mode?: "default" | "raw" | "numeric";
         direction?: "asc" | "desc";
     };
 };
@@ -70,6 +70,8 @@ export function useColumnSort(p: Props): Result {
         let result: number[];
         if (sort?.mode === "raw") {
             result = range(rows).sort((a, b) => compareRaw(vals[a], vals[b]));
+        } else if (sort?.mode === "numeric") {
+            result = range(rows).sort((a,b) => a.localeCompare(b,undefined,{numeric:true}));
         } else {
             result = range(rows).sort((a, b) => vals[a].localeCompare(vals[b]));
         }
